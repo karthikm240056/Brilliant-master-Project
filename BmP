@@ -1,0 +1,63 @@
+ package reflectionexample;
+
+	import java.lang.reflect.Constructor;
+	import java.lang.reflect.Type;
+
+	
+	class GenericClass<T, U> {
+	    
+	    public GenericClass() { }
+
+	    public GenericClass(T first) { }
+
+	    public GenericClass(T first, U second) { }
+
+	    
+		@SuppressWarnings("unused")
+		private GenericClass(int hidden) { } 
+	}
+
+	public class ReflectionConstructors {
+	    public static void main(String[] args) {
+	        try {
+	            
+	            Class<?> clazz = GenericClass.class;
+
+	            System.out.println("Constructors of class: " + clazz.getName());
+	            System.out.println("------------------------------------------------");
+
+	           
+	            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+
+	            for (Constructor<?> constructor : constructors) {
+	               
+	                System.out.print("Constructor: " + constructor.getName() + "(");
+
+	               
+	                Class<?>[] paramTypes = constructor.getParameterTypes();
+	                for (int i = 0; i < paramTypes.length; i++) {
+	                    System.out.println(paramTypes[i].getSimpleName());
+	                    if (i < paramTypes.length - 1) {
+	                        System.out.print(", ");
+	                    }
+	                }
+	                System.out.println(")");
+
+	                
+	                Type[] genericTypes = constructor.getGenericParameterTypes();
+	                if (genericTypes.length > 0) {
+	                    System.out.println("   Generic parameter types: ");
+	                    for (Type type : genericTypes) {
+	                        System.out.println(type.getTypeName() + " ");
+	                    }
+	                    System.out.println();
+	                }
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
+
